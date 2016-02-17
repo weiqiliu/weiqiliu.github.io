@@ -5,19 +5,19 @@
   
   <title>Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="##Android: stickHeaderDecorate在网上找了好久关于Recyclerview顶部黏贴悬浮的效果，终于找到个不错的三方库。github地址，demo其实本质就是Recyclerview的addItemDecoration()通过这个方法给Recyclerview加上装饰。 而这个三方库就是这个装饰的具体实现。先来看看做的Demo
-12345678910111213priva">
+  <meta name="description" content="Android: stickHeaderDecorate在网上找了好久关于Recyclerview顶部黏贴悬浮的效果，终于找到个不错的三方库。github地址，demo其实本质就是Recyclerview的addItemDecoration()通过这个方法给Recyclerview加上装饰。 而这个三方库就是这个装饰的具体实现。先来看看做的Demo
+12345678910111213private">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Hexo">
 <meta property="og:url" content="http://yoursite.com/2016/02/17/Android—stickHeaderDecorate/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="##Android: stickHeaderDecorate在网上找了好久关于Recyclerview顶部黏贴悬浮的效果，终于找到个不错的三方库。github地址，demo其实本质就是Recyclerview的addItemDecoration()通过这个方法给Recyclerview加上装饰。 而这个三方库就是这个装饰的具体实现。先来看看做的Demo
-12345678910111213priva">
-<meta property="og:updated_time" content="2016-02-09T11:12:25.000Z">
+<meta property="og:description" content="Android: stickHeaderDecorate在网上找了好久关于Recyclerview顶部黏贴悬浮的效果，终于找到个不错的三方库。github地址，demo其实本质就是Recyclerview的addItemDecoration()通过这个方法给Recyclerview加上装饰。 而这个三方库就是这个装饰的具体实现。先来看看做的Demo
+12345678910111213private">
+<meta property="og:updated_time" content="2016-02-17T09:26:29.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Hexo">
-<meta name="twitter:description" content="##Android: stickHeaderDecorate在网上找了好久关于Recyclerview顶部黏贴悬浮的效果，终于找到个不错的三方库。github地址，demo其实本质就是Recyclerview的addItemDecoration()通过这个方法给Recyclerview加上装饰。 而这个三方库就是这个装饰的具体实现。先来看看做的Demo
-12345678910111213priva">
+<meta name="twitter:description" content="Android: stickHeaderDecorate在网上找了好久关于Recyclerview顶部黏贴悬浮的效果，终于找到个不错的三方库。github地址，demo其实本质就是Recyclerview的addItemDecoration()通过这个方法给Recyclerview加上装饰。 而这个三方库就是这个装饰的具体实现。先来看看做的Demo
+12345678910111213private">
   
     <link rel="alternative" href="/atom.xml" title="Hexo" type="application/atom+xml">
   
@@ -66,7 +66,7 @@
         <section id="main"><article id="post-Android—stickHeaderDecorate" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2016/02/17/Android—stickHeaderDecorate/" class="article-date">
-  <time datetime="2016-02-17T06:40:33.000Z" itemprop="datePublished">2016-02-17</time>
+  <time datetime="2016-02-17T09:26:29.000Z" itemprop="datePublished">2016-02-17</time>
 </a>
     
   </div>
@@ -75,7 +75,7 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>##Android: stickHeaderDecorate<br>在网上找了好久关于Recyclerview顶部黏贴悬浮的效果，终于找到个不错的三方库。<br><a href="https://github.com/edubarr/header-decor" target="_blank" rel="external">github地址</a>，<a href="https://github.com/edubarr/header-decor/tree/master/sample/src/main/java/ca/barrenechea/stickyheaders" target="_blank" rel="external">demo</a><br>其实本质就是Recyclerview的addItemDecoration()通过这个方法给Recyclerview加上装饰。 而这个三方库就是这个装饰的具体实现。先来看看做的Demo</p>
+        <h2 id="Android-stickHeaderDecorate"><a href="#Android-stickHeaderDecorate" class="headerlink" title="Android: stickHeaderDecorate"></a>Android: stickHeaderDecorate</h2><p>在网上找了好久关于Recyclerview顶部黏贴悬浮的效果，终于找到个不错的三方库。<br><a href="https://github.com/edubarr/header-decor" target="_blank" rel="external">github地址</a>，<a href="https://github.com/edubarr/header-decor/tree/master/sample/src/main/java/ca/barrenechea/stickyheaders" target="_blank" rel="external">demo</a><br>其实本质就是Recyclerview的addItemDecoration()通过这个方法给Recyclerview加上装饰。 而这个三方库就是这个装饰的具体实现。先来看看做的Demo</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">initview</span><span class="params">()</span></span>&#123;</span><br><span class="line">        recyclerView=(RecyclerView) findViewById(R.id.recyclerview);</span><br><span class="line">        <span class="keyword">final</span> LinearLayoutManager layoutManager = <span class="keyword">new</span> LinearLayoutManager(<span class="keyword">this</span>, LinearLayoutManager.VERTICAL, <span class="keyword">false</span>);</span><br><span class="line">        recyclerView.setHasFixedSize(<span class="keyword">true</span>);</span><br><span class="line">        recyclerView.setItemAnimator(<span class="keyword">new</span> DefaultItemAnimator());</span><br><span class="line">        recyclerView.setLayoutManager(layoutManager);</span><br><span class="line">        adapter = <span class="keyword">new</span> StickAdapter(<span class="keyword">this</span>);</span><br><span class="line">        decor = <span class="keyword">new</span> StickyHeaderDecoration(adapter);</span><br><span class="line">        adapter.setHeaderList(setTitleList());</span><br><span class="line">        adapter.setContentList(setcontentList());</span><br><span class="line">        recyclerView.setAdapter(adapter);</span><br><span class="line">        recyclerView.addItemDecoration(decor);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
 <p>和平时普通使用Recyclerview时的操作类似。只是要注意两点：<br>1.需要把header和content的内容分为两个数据结构，方便使用<br>2.把adapter,recycler, StickyHeaderDecoration(三方库)关联起来<br>下面是adapter中的实现</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">StickAdapter</span> <span class="keyword">extends</span> <span class="title">RecyclerView</span>.<span class="title">Adapter</span>&lt;<span class="title">StickAdapter</span>.<span class="title">ContentViewHolder</span>&gt;</span><br><span class="line">        <span class="keyword">implements</span> <span class="title">StickyHeaderAdapter</span>&lt;<span class="title">StickAdapter</span>.<span class="title">TitleViewHolder</span>&gt; </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> Context context;</span><br><span class="line">    <span class="keyword">private</span> LayoutInflater mInflater;</span><br><span class="line">    <span class="keyword">private</span> List&lt;String&gt; headerList = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">    <span class="keyword">private</span> List&lt;String&gt; contentList = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">StickAdapter</span><span class="params">(Context context)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.context = context;</span><br><span class="line">        <span class="keyword">this</span>.mInflater = LayoutInflater.from(context);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="keyword">public</span> StickAdapter.<span class="function">ContentViewHolder <span class="title">onCreateViewHolder</span><span class="params">(ViewGroup parent, <span class="keyword">int</span> viewType)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> ContentViewHolder(mInflater.inflate(R.layout.list_item_home_content, parent, <span class="keyword">false</span>));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onBindViewHolder</span><span class="params">(StickAdapter.ContentViewHolder holder, <span class="keyword">int</span> position)</span> </span>&#123;</span><br><span class="line">        holder.txtCotent.setText(contentList.get(position));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getItemCount</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> contentList.size();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">long</span> <span class="title">getHeaderId</span><span class="params">(<span class="keyword">int</span> position)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> (<span class="keyword">long</span>) position / <span class="number">5</span>;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="keyword">public</span> StickAdapter.<span class="function">TitleViewHolder <span class="title">onCreateHeaderViewHolder</span><span class="params">(ViewGroup parent)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> TitleViewHolder(mInflater.inflate(R.layout.list_item_home_title, parent, <span class="keyword">false</span>));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onBindHeaderViewHolder</span><span class="params">(StickAdapter.TitleViewHolder titleViewHolder, <span class="keyword">int</span> i)</span> </span>&#123;</span><br><span class="line">        titleViewHolder.txtTitle.setText(getHeaderId(i) + <span class="string">""</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setHeaderList</span><span class="params">(List&lt;String&gt; headerList)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.headerList.addAll(headerList);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setContentList</span><span class="params">(List&lt;String&gt; contentList)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.contentList.addAll(contentList);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">ContentViewHolder</span> <span class="keyword">extends</span> <span class="title">RecyclerView</span>.<span class="title">ViewHolder</span> </span>&#123;</span><br><span class="line">        <span class="keyword">private</span> TextView txtCotent;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="title">ContentViewHolder</span><span class="params">(View itemView)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">super</span>(itemView);</span><br><span class="line">            txtCotent=(TextView) itemView.findViewById(R.id.txtContent);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">TitleViewHolder</span> <span class="keyword">extends</span> <span class="title">RecyclerView</span>.<span class="title">ViewHolder</span> </span>&#123;</span><br><span class="line">        <span class="keyword">private</span> TextView txtTitle;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="title">TitleViewHolder</span><span class="params">(View itemView)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">super</span>(itemView);</span><br><span class="line">            txtTitle=(TextView) itemView.findViewById(R.id.txtTitle);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -84,7 +84,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2016/02/17/Android—stickHeaderDecorate/" data-id="cikqmt76w000697ufitms6uvr" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2016/02/17/Android—stickHeaderDecorate/" data-id="cikqn6tcy0004jtufsf2jvvt5" class="article-share-link">Share</a>
       
       
     </footer>
@@ -93,7 +93,7 @@
     
 <nav id="article-nav">
   
-    <a href="/2016/02/17/html-and-css/" id="article-nav-newer" class="article-nav-link-wrap">
+    <a href="/2016/02/17/Difference_from_dp_dip_px_sp/" id="article-nav-newer" class="article-nav-link-wrap">
       <strong class="article-nav-caption">Newer</strong>
       <div class="article-nav-title">
         
@@ -103,9 +103,9 @@
     </a>
   
   
-    <a href="/2016/02/17/Dagger2/" id="article-nav-older" class="article-nav-link-wrap">
+    <a href="/2016/02/17/hello-world/" id="article-nav-older" class="article-nav-link-wrap">
       <strong class="article-nav-caption">Older</strong>
-      <div class="article-nav-title"></div>
+      <div class="article-nav-title">Hello World</div>
     </a>
   
 </nav>
@@ -127,7 +127,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">February 2016</a><span class="archive-list-count">8</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">February 2016</a><span class="archive-list-count">6</span></li></ul>
     </div>
   </div>
 
@@ -139,7 +139,7 @@
       <ul>
         
           <li>
-            <a href="/2016/02/17/Android-图片压缩/">(no title)</a>
+            <a href="/2016/02/17/Android-图片压缩/">Android 图片压缩</a>
           </li>
         
           <li>
@@ -147,15 +147,15 @@
           </li>
         
           <li>
+            <a href="/2016/02/17/html-and-css/">(no title)</a>
+          </li>
+        
+          <li>
             <a href="/2016/02/17/Difference_from_dp_dip_px_sp/">(no title)</a>
           </li>
         
           <li>
-            <a href="/2016/02/17/otto/">(no title)</a>
-          </li>
-        
-          <li>
-            <a href="/2016/02/17/html-and-css/">(no title)</a>
+            <a href="/2016/02/17/Android—stickHeaderDecorate/">(no title)</a>
           </li>
         
       </ul>
