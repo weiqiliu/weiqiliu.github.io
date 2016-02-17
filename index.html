@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Hexo">
+<meta property="og:url" content="http://yoursite.com/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Hexo">
+<meta name="twitter:description">
+  
+    <link rel="alternative" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" type="text/css">
+  
+
+</head>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main">
+  
+    <article id="post-Android-图片压缩" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/02/17/Android-图片压缩/" class="article-date">
+  <time datetime="2016-02-17T06:45:31.000Z" itemprop="datePublished">2016-02-17</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>##Android 图片压缩</p>
+<p>对图片压缩在App应用里是非常普遍和常见的。Android程序的性能和内存问题，大部分都和图片紧密相关，而图片的加载在很多情况下很用到Bitmap（位图）这个类。而由于Bitmap自身的特性（将每个像素的属性全部保存在内存中），导致稍有不慎就会创建出一个占用内存非常大的Bitmap对象，从而导致加载过慢，还会有内存溢出的风险。所以，Android程序要做优化，Bitmap的优化是必不可少的一步。</p>
+<p>压缩原理：压缩一张图片，我们需要知道这张图片的原始大小，然后根据我们设定的压缩比例进行压缩。主要分三步</p>
+<ul>
+<li>获取原始图片的长宽</li>
+<li>计算缩放比例</li>
+<li>根据计算出的inSampleSize生成Bitmap </li>
+</ul>
+<p><strong>1.获取原始图片的长宽</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">BitmapFactory.Options options = <span class="keyword">new</span> BitmapFactory.Options();</span><br><span class="line">options.inJustDecodeBounds = <span class="keyword">true</span>;</span><br><span class="line"></span><br><span class="line">BitmapFactory.decodeResource(getResources(),R.id.myimage,options;</span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> imageHeight = options.outHeight;</span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> imageWidth = options.outWidth;</span><br><span class="line"></span><br><span class="line">String imageType = options.outMimeType;</span><br></pre></td></tr></table></figure>
+<p>要说明的一下的是，如果直接使用BitmapFactory.decodeResource()方法来从资源文件中读取一张图片会生成一个Bitmap，它会占用一定的内存。但如果再之前使用一个BitmapFactory.Options对象，并把Options的inJustDecodeBounds属性设置为true，会使得decodeResource(Resources res, int id, Options opts)方法就不会生成Bitmap对象，因为opts控制了decodeResource是对图片完全解码还是只返回图片的大小，当是true时仅仅是读取该图片的尺寸和类型信息。</p>
+<p>这是源码中对于inJustDecodeBounds的说明，如果设置为true,编译器返回空即不会返回bitmap,但是会允许调用者查询其属性。 然而不会为bitmap分配内存空间。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span><br><span class="line"> * If set to true, the decoder will return null (no bitmap), but</span><br><span class="line"> * the out... fields will still be set, allowing the caller to query</span><br><span class="line"> * the bitmap without having to allocate the memory for its pixels.</span><br><span class="line"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">boolean</span> inJustDecodeBounds;</span><br></pre></td></tr></table></figure>
+<p><strong>2.计算缩放比例</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> height = options.outHeight;  </span><br><span class="line">   <span class="keyword">int</span> width = options.outWidth;   </span><br><span class="line">   <span class="keyword">int</span> inSampleSize = <span class="number">1</span>;  </span><br><span class="line">   <span class="keyword">int</span> reqHeight=<span class="number">800</span>;  </span><br><span class="line">   <span class="keyword">int</span> reqWidth=<span class="number">480</span>;  </span><br><span class="line">   <span class="keyword">if</span> (height &gt; reqHeight || width &gt; reqWidth) &#123;  </span><br><span class="line">  		<span class="keyword">final</span> <span class="keyword">int</span> heightRatio = Math.round((<span class="keyword">float</span>) height/ (<span class="keyword">float</span>) reqHeight);  </span><br><span class="line">  		<span class="keyword">final</span> <span class="keyword">int</span> widthRatio = Math.round((<span class="keyword">float</span>) width / (<span class="keyword">float</span>) reqWidth);              </span><br><span class="line">  		inSampleSize = heightRatio &lt; widthRatio ? heightRatio : widthRatio;  </span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+<p>例子中压缩后图片期望的宽带定为480，高度设为800，这2个值只是期望的宽度与高度，实际上压缩后的实际宽度也高度会比期望的要大。如果图片的原始高度或者宽带大约我们期望的宽带和高度，我们需要计算出缩放比例的数值。否则就不缩放。heightRatio是图片原始高度与压缩后高度的倍数，widthRatio是图片原始宽度与压缩后宽度的倍数。inSampleSize为heightRatio与widthRatio中最小的那个，inSampleSize就是缩放值。 inSampleSize为1表示宽度和高度不缩放，为2表示压缩后的宽度与高度为原来的1/2，小于1自动默认为1</p>
+<p><strong>3.根据计算出的inSampleSize生成Bitmap</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//计算 inSampleSize 的值</span></span><br><span class="line"> options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);</span><br><span class="line"> </span><br><span class="line"> <span class="comment">//根据计算出的 inSampleSize 来解码图片生成Bitmap</span></span><br><span class="line"> options.inJustDecodeBounds = <span class="keyword">false</span>;</span><br><span class="line"></span><br><span class="line"> <span class="keyword">return</span> BitmapFactory.decodeResource(res, resId, options);</span><br></pre></td></tr></table></figure>
+<p>注意，最后要生成返回bitmap，所以option的inJustDecodeBounds的设置为false。</p>
+<p>最后贴上一个完整的代码</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">BitMapUtil</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Bitmap <span class="title">decodeSampledBitmapFromResource</span><span class="params">(Resources res, <span class="keyword">int</span> resId,</span><br><span class="line">                                                         <span class="keyword">int</span> reqWidth, <span class="keyword">int</span> reqHeight)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 首先设置 inJustDecodeBounds=true 来获取图片尺寸</span></span><br><span class="line">        <span class="keyword">final</span> BitmapFactory.Options options = <span class="keyword">new</span> BitmapFactory.Options();</span><br><span class="line">        options.inJustDecodeBounds = <span class="keyword">true</span>;</span><br><span class="line">        BitmapFactory.decodeResource(res, resId, options);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 计算 inSampleSize 的值</span></span><br><span class="line">        options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 根据计算出的 inSampleSize 来解码图片生成Bitmap</span></span><br><span class="line">        options.inJustDecodeBounds = <span class="keyword">false</span>;</span><br><span class="line">        <span class="keyword">return</span> BitmapFactory.decodeResource(res, resId, options);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">calculateInSampleSize</span><span class="params">(</span><br><span class="line">            BitmapFactory.Options options, <span class="keyword">int</span> reqWidth, <span class="keyword">int</span> reqHeight)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 原始图片的宽高</span></span><br><span class="line">        <span class="keyword">final</span> <span class="keyword">int</span> height = options.outHeight;</span><br><span class="line">        <span class="keyword">final</span> <span class="keyword">int</span> width = options.outWidth;</span><br><span class="line">        <span class="keyword">int</span> inSampleSize = <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (height &gt; reqHeight || width &gt; reqWidth) &#123;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">final</span> <span class="keyword">int</span> halfHeight = height / <span class="number">2</span>;</span><br><span class="line">            <span class="keyword">final</span> <span class="keyword">int</span> halfWidth = width / <span class="number">2</span>;</span><br><span class="line"></span><br><span class="line">            <span class="comment">// 在保证解析出的bitmap宽高分别大于目标尺寸宽高的前提下，取可能的inSampleSize的最大值</span></span><br><span class="line">            <span class="keyword">while</span> ((halfHeight / inSampleSize) &gt; reqHeight</span><br><span class="line">                    &amp;&amp; (halfWidth / inSampleSize) &gt; reqWidth) &#123;</span><br><span class="line">                inSampleSize *= <span class="number">2</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> inSampleSize;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">getSize</span><span class="params">(Resources res, <span class="keyword">int</span> resId,</span><br><span class="line">                              <span class="keyword">int</span> reqWidth, <span class="keyword">int</span> reqHeight)</span></span>&#123;</span><br><span class="line">        <span class="keyword">final</span> BitmapFactory.Options options = <span class="keyword">new</span> BitmapFactory.Options();</span><br><span class="line">        options.inJustDecodeBounds = <span class="keyword">true</span>;</span><br><span class="line">        BitmapFactory.decodeResource(res, resId, options);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 计算 inSampleSize 的值</span></span><br><span class="line">        options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);</span><br><span class="line"></span><br><span class="line">        options.inJustDecodeBounds = <span class="keyword">true</span>;</span><br><span class="line">        BitmapFactory.decodeResource(res, resId, options);</span><br><span class="line">        <span class="keyword">return</span> options.outHeight;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2016/02/17/Android-图片压缩/" data-id="cikqi8bvw0000xmufcmzolsin" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-Android_Metarial_Design_Component" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/02/17/Android_Metarial_Design_Component/" class="article-date">
+  <time datetime="2016-02-17T06:44:38.000Z" itemprop="datePublished">2016-02-17</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="Android-Metarial-Design-Component"><a href="#Android-Metarial-Design-Component" class="headerlink" title="#Android Metarial Design Component"></a>#Android Metarial Design Component</h2><p>Android 5.0发布了Metarial design设计规范，也发布了许多新组件，在这里总结一些比较好的，未来项目可能会用到的组件的介绍和基本用法。</p>
+<ul>
+<li><p>###ToolBar</p>
+<p>  <a href="http://www.jcodecraeer.com/a/anzhuokaifa/androidkaifa/2014/1118/2006.html" target="_blank" rel="external">先给个不错的链接介绍</a><br>  google推荐的App bar标准，但是有些缺陷，这个bar的高度为actionBarSize<br>内部的所有图标文字均是按这个高度来设计的，所以有了一定的局限性，可能是Google为了规范标准吧。它规定了返回图标，logo，主副标题，更多图标。</p>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&lt;android.support.v7.widget.Toolbar</span><br><span class="line">            android:id=<span class="string">"@+id/toolbar"</span></span><br><span class="line">            android:layout_width=<span class="string">"match_parent"</span></span><br><span class="line">            android:layout_height=<span class="string">"?attr/actionBarSize"</span></span><br><span class="line">            android:background=<span class="string">"?attr/colorPrimary"</span></span><br><span class="line">            app:title=<span class="string">"主标题"</span></span><br><span class="line">            app:titleTextColor=<span class="string">"#ffffff"</span></span><br><span class="line">            app:subtitle=<span class="string">"副标题"</span></span><br><span class="line">            app:subtitleTextColor=<span class="string">"#ffffff"</span></span><br><span class="line">            app:navigationIcon=<span class="string">"@drawable/icon_back_white"</span></span><br><span class="line">            app:popupTheme=<span class="string">"@style/ThemeOverlay.AppCompat.Light"</span> /&gt;</span><br></pre></td></tr></table></figure>
+<ul>
+<li><p>###AppBarLayout</p>
+<p>  AppBarLayout的作用就是把多个component组装成一个AppBar，通常这个组件是配合后面介绍的 CoordinatorLayout 和 CollapsingToolbarLayout来使用了，另外它提供的OnOffsetChangedListener的接口方法使我们很容易的获取我们的滑动状态</p>
+</li>
+</ul>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">&lt;android.support.design.widget.AppBarLayout</span><br><span class="line">        android:id="@+id/appbar"</span><br><span class="line">        android:layout_width="match_parent"</span><br><span class="line">        android:layout_height="wrap_content"</span><br><span class="line">        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"&gt;</span><br><span class="line"></span><br><span class="line">        &lt;android.support.v7.widget.Toolbar</span><br><span class="line">            android:id="@+id/toolbar"</span><br><span class="line">            android:layout_width="match_parent"</span><br><span class="line">            android:layout_height="?attr/actionBarSize"</span><br><span class="line">            android:background="?attr/colorPrimary"</span><br><span class="line">            app:layout_scrollFlags="scroll"</span><br><span class="line">            app:title="主标题"</span><br><span class="line">            app:titleTextColor="#ffffff"</span><br><span class="line">            app:subtitle="副标题"</span><br><span class="line">            app:subtitleTextColor="#ffffff"</span><br><span class="line">            app:navigationIcon="@drawable/icon_back_white"</span><br><span class="line">            app:popupTheme="@style/ThemeOverlay.AppCompat.Light" /&gt;</span><br><span class="line"></span><br><span class="line">        &lt;ImageView</span><br><span class="line">            android:layout_width="match_parent"</span><br><span class="line">            android:layout_height="wrap_content"</span><br><span class="line">            android:background="@drawable/ic_kind_01" /&gt;</span><br><span class="line"></span><br><span class="line">&lt;/android.support.design.widget.AppBarLayout&gt;</span><br></pre></td></tr></table></figure>
+<ul>
+<li><p>###CoordinatorLayout</p>
+<p>  首先你可以把coordinatorLayout当做一个可以滚动的FrametLayout,一样提供诸如android:layout_gravity等设置参数,它的布局方式默认也是一层一层叠上去得。它是用来<font color="red" size="4px">协调</font>它的子views之间协作的一个父view。这和传统的ViewGroup不同，子view从此知道了彼此之间的存在，一个子view的变化可以通知到另一个子view。CoordinatorLayout所做的事情就是当成一个通信的桥梁，连接不同的view。使用Behavior对象进行通信。</p>
+</li>
+</ul>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line">	&lt;android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"</span><br><span class="line">    xmlns:app="http://schemas.android.com/apk/res-auto"</span><br><span class="line">    android:id="@+id/main_content"</span><br><span class="line">    android:layout_width="match_parent"</span><br><span class="line">    android:layout_height="match_parent"&gt;</span><br><span class="line"></span><br><span class="line">    &lt;android.support.design.widget.AppBarLayout</span><br><span class="line">        android:id="@+id/appbar"</span><br><span class="line">        android:layout_width="match_parent"</span><br><span class="line">        android:layout_height="wrap_content"</span><br><span class="line">        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"&gt;</span><br><span class="line"></span><br><span class="line">        &lt;android.support.v7.widget.Toolbar</span><br><span class="line">            android:id="@+id/toolbar"</span><br><span class="line">            android:layout_width="match_parent"</span><br><span class="line">            android:layout_height="?attr/actionBarSize"</span><br><span class="line">            android:background="?attr/colorPrimary"</span><br><span class="line">            app:layout_scrollFlags="scroll"</span><br><span class="line">            app:title="主标题"</span><br><span class="line">            app:titleTextColor="#ffffff"</span><br><span class="line">            app:subtitle="副标题"</span><br><span class="line">            app:subtitleTextColor="#ffffff"</span><br><span class="line">            app:navigationIcon="@drawable/icon_back_white"</span><br><span class="line">            app:popupTheme="@style/ThemeOverlay.AppCompat.Light" /&gt;</span><br><span class="line"></span><br><span class="line">        &lt;ImageView</span><br><span class="line">            android:layout_width="match_parent"</span><br><span class="line">            android:layout_height="wrap_content"</span><br><span class="line">            android:background="@drawable/ic_kind_01" /&gt;</span><br><span class="line"></span><br><span class="line">    &lt;/android.support.design.widget.AppBarLayout&gt;</span><br><span class="line">    &lt;android.support.v7.widget.RecyclerView</span><br><span class="line">        android:id="@+id/rvToDoList"</span><br><span class="line">        android:layout_width="match_parent"</span><br><span class="line">        android:layout_height="match_parent"</span><br><span class="line">        app:layout_behavior="@string/appbar_scrolling_view_behavior"/&gt;</span><br><span class="line"></span><br><span class="line">&lt;/android.support.design.widget.CoordinatorLayout&gt;</span><br></pre></td></tr></table></figure>
+<p>注意里面的</p>
+<p>1.app:layout_behavior=”@stringappbar_scrolling_view_behavior”<br>这个就是设置了behavior参数，使这个recyclerview与Appbar关联了起来.<br>2.app:layout_scrollFlags这个参数将设置滑动的效果</p>
+<p>– scroll: this flag should be set for all views that want to scroll off the screen - for views that do not use this flag, they’ll remain pinned to the top of the screen<br>– enterAlways: this flag ensures that any downward scroll will cause this view to become visible, enabling the ‘quick return’ pattern<br>– enterAlwaysCollapsed: When your view has declared a minHeight and you use this flag, your View will only enter at its minimum height (i.e., ‘collapsed’), only re-expanding to its full height when the scrolling view has reached it’s top.<br>– exitUntilCollapsed: this flag causes the view to scroll off until it is ‘collapsed’ (its minHeight) before exiting(向上滚动时收缩View，但可以固定Toolbar一直在上面。)</p>
+<p>后两种要配合下面介绍的Collapsingtoolbarlayout才会生效</p>
+<ul>
+<li>###Collapsingtoolbarlayout</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2016/02/17/Android_Metarial_Design_Component/" data-id="cikqi8bwk0007xmuf8cj17bcn" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-Difference_from_dp_dip_px_sp" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/02/17/Difference_from_dp_dip_px_sp/" class="article-date">
+  <time datetime="2016-02-17T06:44:11.000Z" itemprop="datePublished">2016-02-17</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>##Difference from dp dip px sp</p>
+<p>Android 开发最让人头疼的问题就是适配问题了，各种手机厂商各种型号的手机鱼龙混杂。所以理解好dp,px,sp等度量单位尤为重要，也是开发的基本常识。<br>首先我们第一个要了解的是desity的概念，屏幕密度，就是一英寸里有多少个像素点，理论上来说密度越高越清晰,单位为ppi(pixels per inch) Android系统定义了四种像素密度：低（120dpi）、中（160dpi）、高（240dpi）和超高（320dpi），它们对应的dp到px的系数分别为0.75、1、1.5和2</p>
+<ul>
+<li>px(pixels) 像素,没什么好解释的。例如，320*480的屏幕在横向有320个象素，在纵向有480个象素。</li>
+<li>dp也叫dip（device indenpendent pixels）设备独立像素，dp不会依赖于手机的分辨率，而是依赖于density，它会随着不同手机的密度不同，自动变化为相应的px长度。举个列子，在density=160时，1dp=1px。这是我们把一根线=120px，在160desity下，它为120px,而在320density下，它变为了原来的一半。 而如果我们把线=120dp，在160desity下，它为120px,而在320density下，它会变为240px，使之与前面的长度相同。 </li>
+<li>sp （scaled pixels）要处理字体的大小。与dp类似，但是可以根据用户的字体大小首选项进行缩放。主要用于字体显示best for textsize。由此，根据 google 的建议，TextView 的字号最好使用 sp 做单位，而且查看TextView的源码可知 Android 默认使用 sp 作为字号单位。</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2016/02/17/Difference_from_dp_dip_px_sp/" data-id="cikqi8bwf0004xmuffmy5vdp3" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-otto" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/02/17/otto/" class="article-date">
+  <time datetime="2016-02-17T06:40:56.000Z" itemprop="datePublished">2016-02-17</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="otto"><a href="#otto" class="headerlink" title="#otto"></a>#otto</h2><p><a href="http://square.github.io/otto/" target="_blank" rel="external">官网地址</a></p>
+<p>otto是一个开源工程利用<font color="red" size="2px">“订阅\发布”</font>来供组件之间事件传递的.它本身库很小但是却能很好的减低代码耦合性(decouple)，和EventBus是同样的作用，相较于Android本身的广播机制来说有诸多好处而且方便实用。</p>
+<p>otto简单来说由以下两个构成</p>
+<ul>
+<li>一个类： Bus类（用于注册类，注销类，发布事件）</li>
+<li>两个注解： @Subscribe (订阅)    @Produce (生产)   </li>
+</ul>
+<p>1.创建Bus实例时最好使用单例模式（虽然这不是必须的）<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Bus bus = <span class="keyword">new</span> Bus();</span><br></pre></td></tr></table></figure></p>
+<p>2.发布消息，会全局发送出消息。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bus.post(<span class="keyword">new</span> UserNameEvent());</span><br></pre></td></tr></table></figure></p>
+<p>3.订阅消息，收到发出的消息，如果和消息的对象一致就接受消息并处理<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="annotation">@Subscribe</span> <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">answerAvailable</span><span class="params">(UserNameEvent event)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// <span class="doctag">TODO:</span> React to the event somehow!</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>来来来看Demo时间到了，说再多也顶不上一个Demo，下面我们来看一个最简单的Demo:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MainActivity</span> <span class="keyword">extends</span> <span class="title">BaseActivity</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> Bus bus;</span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onCreate</span><span class="params">(Bundle savedInstanceState)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.onCreate(savedInstanceState);</span><br><span class="line">        setContentView(R.layout.activity_main);</span><br><span class="line">        initview();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onDestroy</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.onDestroy();</span><br><span class="line">        bus.unregister(<span class="keyword">this</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">initview</span><span class="params">()</span></span>&#123;</span><br><span class="line">        bus = <span class="keyword">new</span> Bus(ThreadEnforcer.MAIN);</span><br><span class="line">        bus.register(<span class="keyword">this</span>);</span><br><span class="line">        button=(Button) findViewById(R.id.btn1);</span><br><span class="line">        button.setOnClickListener(<span class="keyword">new</span> View.OnClickListener() &#123;</span><br><span class="line">            <span class="annotation">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onClick</span><span class="params">(View v)</span> </span>&#123;</span><br><span class="line">                bus.post(<span class="string">"hellow otto"</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Subscribe</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">getMessage</span><span class="params">(String s)</span> </span>&#123;</span><br><span class="line">        Toast.makeText(<span class="keyword">this</span>, s, Toast.LENGTH_LONG).show();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>为了简单起见我是在同一个Activity中发布消息与注册的，注意Bus里的paremeters。</p>
+<p><font color="green" size="2px">ThreadEnforcer.MAIN</font>在这种情况下消息只能从主线程发出，如果你需要从其它线程发出可以使用<font color="green" size="2px">ThreadEnforcer.ANY</font>。以上就是最基础的应用了。</p>
+<hr>
+<p>可以用过继承BUS类来自定义扩展功能，这里举用自己项目中的例子</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">AndroidBus</span> <span class="keyword">extends</span> <span class="title">Bus</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> Handler mainThread = <span class="keyword">new</span> Handler(Looper.getMainLooper());</span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">post</span><span class="params">(<span class="keyword">final</span> Object event)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (Looper.myLooper() == Looper.getMainLooper()) &#123;</span><br><span class="line">            <span class="keyword">super</span>.post(event);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            mainThread.post(<span class="keyword">new</span> Runnable() &#123;</span><br><span class="line">                <span class="annotation">@Override</span></span><br><span class="line">                <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">                    post(event);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>1.通过继承Bus,当post消息时，如果实在主线程就调用本身的方法，如果不是在主线程，就把post操作利用handle传到主线程，在主线程中调用发送消息方法。这样不论是在主线程还是子线程都会跑到主线程去发送消息。避免了上面那个Demo里的问题</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">GlobalBus</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">SingletonHolder</span> </span>&#123;</span><br><span class="line">        <span class="keyword">static</span> Bus instance = <span class="keyword">new</span> AndroidBus();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">static</span> Bus <span class="title">getInstance</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> SingletonHolder.instance;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">unregister</span><span class="params">(Object object)</span> </span>&#123;</span><br><span class="line">        getInstance().unregister(object);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">post</span><span class="params">(Object event)</span> </span>&#123;</span><br><span class="line">        getInstance().post(event);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">register</span><span class="params">(Object object)</span> </span>&#123;</span><br><span class="line">        getInstance().register(object);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>2.然后在这个类中保证了Bus只会被创建一次。以后bus的操作就可以用GlobalBus来操作了。需要使用时只需要<code>GlobalBus.register(this);</code>。OnDestory()时只需要<code>GlobalBus.unregister(this);</code>就可以了。更加方便使用了</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2016/02/17/otto/" data-id="cikqi8bw40001xmuf7zudh9ct" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-html-and-css" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/02/17/html-and-css/" class="article-date">
+  <time datetime="2016-02-17T06:40:45.000Z" itemprop="datePublished">2016-02-17</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <hr>
+<p>###Html+CSS:</p>
+<ul>
+<li><strong>HTML是网页内容的载体</strong>。内容就是网页制作者放在页面上想要让用户浏览的信息，可以包含文字、图片、视频等。</li>
+<li><strong>CSS样式是表现</strong>。就像网页的外衣。比如，标题字体、颜色变化，或为标题加入背景图片、边框等。所有这些用来改变内容外观的东西称之为表现。</li>
+<li><strong>JavaScript是用来实现网页上的特效效果</strong>。如：鼠标滑过弹出下拉菜单。或鼠标滑过表格的背景颜色改变。还有焦点新闻（新闻图片）的轮换。可以这么理解，有动画的，有交互的一般都是用JavaScript来实现的。</li>
+</ul>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">html</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">head</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="title">meta</span> <span class="attribute">http-equiv</span>=<span class="value">"Content-Type"</span> <span class="attribute">content</span>=<span class="value">"text/html; charset=utf-8"</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="title">title</span>&gt;</span>认识html文件基本结构<span class="tag">&lt;/<span class="title">title</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="title">style</span>&gt;</span><span class="css"></span><br><span class="line">        	<span class="tag">h1</span><span class="rules">&#123;<span class="rule"><span class="attribute">color</span>:<span class="value">red</span></span></span>&#125;</span><br><span class="line">        </span><span class="tag">&lt;/<span class="title">style</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="title">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">body</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="title">h1</span>&gt;</span>在本小节中，你将学会认识html文件基本结构<span class="tag">&lt;/<span class="title">h1</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="title">body</span>&gt;</span></span><br><span class="line">    </span><br><span class="line">    <span class="tag">&lt;/<span class="title">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<hr>
+<p>##常用标签</p>
+<ul>
+<li>p 段落</li>
+<li>hx 不同的标题大小</li>
+<li>em 斜体</li>
+<li>stong 粗体</li>
+<li>span 自定义样式（配合css使用）</li>
+<li>q 引用（会自动添加上“”，但觉得并没有什么屌用）</li>
+<li>br 换行（相当于回车）</li>
+<li>address 地址（说白了就是把字体默认为斜体，可以通过css修改，发现也并没有 屌用，感觉用span可以替代）</li>
+<li>code 插入一句代码（会使排版有些变化）</li>
+<li>pre 插入一段代码</li>
+<li>ul（ol） li 组成列表</li>
+<li>div 分块</li>
+<li>table 表格 tr 表示行 td th表示列，th多用于表示表的第一列</li>
+<li>caption 表格标题</li>
+<li>a 链接 herf链接地址</li>
+<li>img 图片 src 图片url</li>
+</ul>
+<hr>
+<p>##表单<br><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">form</span> <span class="attribute">method</span>=<span class="value">"传递方式如POST/GET"</span> <span class="attribute">action</span>=<span class="value">"服务器文件，输入数据后被传到的文件"</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">input</span> <span class="attribute">type</span>=<span class="value">"表单类型"</span> <span class="attribute">value</span>=<span class="value">"默认值"</span> <span class="attribute">name</span>=<span class="value">"控件名称，后台使用"</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>####type类型</p>
+<ul>
+<li>text 普通输入文本框</li>
+<li>passwod 密码输入框</li>
+<li>submit 提交按钮</li>
+<li>reset 充值按钮</li>
+<li>checkbox 复选框</li>
+<li>radio 单选框</li>
+</ul>
+<p>&lt; textarea rows=”行数” cols=”列数”&gt; 大段文本输入框<br>&lt; select&gt; 下拉列表<br>    &lt; option value=”向后台的提交值”&gt;展示值&lt;/ option&gt;<br>&lt; label for=”与之配对的input的name”&gt; 普通文本</p>
+<hr>
+<p>##CSS<br>css分为三类：<strong>内嵌式</strong>，<strong>嵌入式</strong>，<strong>外链式</strong><br>当他们同时存在时，内嵌式&gt;嵌入式&gt;外链式<br><strong>内嵌式：</strong></p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">p</span> <span class="attribute">style</span>=<span class="value">"color:red ; font-size=12px"</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p><strong>嵌入式：</strong><br>在&lt; head&gt;标签里定义</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">style</span> <span class="attribute">type</span>=<span class="value">"test/css"</span>&gt;</span><span class="css"></span><br><span class="line">	<span class="tag">p</span><span class="rules">&#123;<span class="rule"><span class="attribute">color</span>:<span class="value">red</span></span>; font-size=12px&#125;</span></span><br><span class="line"></span><span class="tag">&lt;/<span class="title">style</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p><strong>外链式：</strong><br>在&lt; head&gt;标签里定义<br>其中rel和type是固定写法</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">link</span> <span class="attribute">href</span>=<span class="value">"外部css文件名"</span> <span class="attribute">rel</span>=<span class="value">"stylesheet"</span> <span class="attribute">type</span>=<span class="value">"text/css"</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<hr>
+<p>为了表明css的作用范围引入了<font color="red" size="4px">选择器</font>的感念.</p>
+<ul>
+<li>标签选择器</li>
+<li>类选择器：＃开头，多次性</li>
+<li>id选择器：.开头，一次性</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2016/02/17/html-and-css/" data-id="cikqi8bwc0002xmuf7dec6rvm" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-Android—stickHeaderDecorate" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/02/17/Android—stickHeaderDecorate/" class="article-date">
+  <time datetime="2016-02-17T06:40:33.000Z" itemprop="datePublished">2016-02-17</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>##Android: stickHeaderDecorate<br>在网上找了好久关于Recyclerview顶部黏贴悬浮的效果，终于找到个不错的三方库。<br><a href="https://github.com/edubarr/header-decor" target="_blank" rel="external">github地址</a>，<a href="https://github.com/edubarr/header-decor/tree/master/sample/src/main/java/ca/barrenechea/stickyheaders" target="_blank" rel="external">demo</a><br>其实本质就是Recyclerview的addItemDecoration()通过这个方法给Recyclerview加上装饰。 而这个三方库就是这个装饰的具体实现。先来看看做的Demo</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">initview</span><span class="params">()</span></span>&#123;</span><br><span class="line">        recyclerView=(RecyclerView) findViewById(R.id.recyclerview);</span><br><span class="line">        <span class="keyword">final</span> LinearLayoutManager layoutManager = <span class="keyword">new</span> LinearLayoutManager(<span class="keyword">this</span>, LinearLayoutManager.VERTICAL, <span class="keyword">false</span>);</span><br><span class="line">        recyclerView.setHasFixedSize(<span class="keyword">true</span>);</span><br><span class="line">        recyclerView.setItemAnimator(<span class="keyword">new</span> DefaultItemAnimator());</span><br><span class="line">        recyclerView.setLayoutManager(layoutManager);</span><br><span class="line">        adapter = <span class="keyword">new</span> StickAdapter(<span class="keyword">this</span>);</span><br><span class="line">        decor = <span class="keyword">new</span> StickyHeaderDecoration(adapter);</span><br><span class="line">        adapter.setHeaderList(setTitleList());</span><br><span class="line">        adapter.setContentList(setcontentList());</span><br><span class="line">        recyclerView.setAdapter(adapter);</span><br><span class="line">        recyclerView.addItemDecoration(decor);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>和平时普通使用Recyclerview时的操作类似。只是要注意两点：<br>1.需要把header和content的内容分为两个数据结构，方便使用<br>2.把adapter,recycler, StickyHeaderDecoration(三方库)关联起来<br>下面是adapter中的实现</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">StickAdapter</span> <span class="keyword">extends</span> <span class="title">RecyclerView</span>.<span class="title">Adapter</span>&lt;<span class="title">StickAdapter</span>.<span class="title">ContentViewHolder</span>&gt;</span><br><span class="line">        <span class="keyword">implements</span> <span class="title">StickyHeaderAdapter</span>&lt;<span class="title">StickAdapter</span>.<span class="title">TitleViewHolder</span>&gt; </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> Context context;</span><br><span class="line">    <span class="keyword">private</span> LayoutInflater mInflater;</span><br><span class="line">    <span class="keyword">private</span> List&lt;String&gt; headerList = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">    <span class="keyword">private</span> List&lt;String&gt; contentList = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">StickAdapter</span><span class="params">(Context context)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.context = context;</span><br><span class="line">        <span class="keyword">this</span>.mInflater = LayoutInflater.from(context);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="keyword">public</span> StickAdapter.<span class="function">ContentViewHolder <span class="title">onCreateViewHolder</span><span class="params">(ViewGroup parent, <span class="keyword">int</span> viewType)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> ContentViewHolder(mInflater.inflate(R.layout.list_item_home_content, parent, <span class="keyword">false</span>));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onBindViewHolder</span><span class="params">(StickAdapter.ContentViewHolder holder, <span class="keyword">int</span> position)</span> </span>&#123;</span><br><span class="line">        holder.txtCotent.setText(contentList.get(position));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getItemCount</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> contentList.size();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">long</span> <span class="title">getHeaderId</span><span class="params">(<span class="keyword">int</span> position)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> (<span class="keyword">long</span>) position / <span class="number">5</span>;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="keyword">public</span> StickAdapter.<span class="function">TitleViewHolder <span class="title">onCreateHeaderViewHolder</span><span class="params">(ViewGroup parent)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> TitleViewHolder(mInflater.inflate(R.layout.list_item_home_title, parent, <span class="keyword">false</span>));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onBindHeaderViewHolder</span><span class="params">(StickAdapter.TitleViewHolder titleViewHolder, <span class="keyword">int</span> i)</span> </span>&#123;</span><br><span class="line">        titleViewHolder.txtTitle.setText(getHeaderId(i) + <span class="string">""</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setHeaderList</span><span class="params">(List&lt;String&gt; headerList)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.headerList.addAll(headerList);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setContentList</span><span class="params">(List&lt;String&gt; contentList)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.contentList.addAll(contentList);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">ContentViewHolder</span> <span class="keyword">extends</span> <span class="title">RecyclerView</span>.<span class="title">ViewHolder</span> </span>&#123;</span><br><span class="line">        <span class="keyword">private</span> TextView txtCotent;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="title">ContentViewHolder</span><span class="params">(View itemView)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">super</span>(itemView);</span><br><span class="line">            txtCotent=(TextView) itemView.findViewById(R.id.txtContent);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">TitleViewHolder</span> <span class="keyword">extends</span> <span class="title">RecyclerView</span>.<span class="title">ViewHolder</span> </span>&#123;</span><br><span class="line">        <span class="keyword">private</span> TextView txtTitle;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="title">TitleViewHolder</span><span class="params">(View itemView)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">super</span>(itemView);</span><br><span class="line">            txtTitle=(TextView) itemView.findViewById(R.id.txtTitle);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>继承了StickyHeaderAdapter，然后实现其方法把完成eader的布局和展示。需要说明的一个方法是<font color="red" size="4px">getHeaderId(int position)</font>,这个方法是在相应的position展示header.</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2016/02/17/Android—stickHeaderDecorate/" data-id="cikqi8bwi0006xmufi0rvysdk" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-Dagger2" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/02/17/Dagger2/" class="article-date">
+  <time datetime="2016-02-17T06:39:52.000Z" itemprop="datePublished">2016-02-17</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="Dagger-2"><a href="#Dagger-2" class="headerlink" title="#Dagger 2"></a>#Dagger 2</h2><p><a href="http://square.github.io/dagger/" target="_blank" rel="external">首先附上官网地址</a><br>    google提供的一个依赖注入的框架，可以极大的精简代码，降低耦合度。是在实际项目中不可获取的优秀库。 Dagger2相较于Dagger有了不少改进，它能自动生成部分相应代码来简化我们的操作。<br>    为了更好的理解Dagger2，首先要了解这几个概念:</p>
+<ul>
+<li>Component：@Provides与@Inject的桥梁，把依赖注入到所需对象中</li>
+<li>Module: 提供相关依赖</li>
+</ul>
+<p>下面来看一个最简单例子：<br>1.首先创建一个Module来提供相关的依赖</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="annotation">@Module</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ActivityModule</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Provides</span></span><br><span class="line">    <span class="function">UserModel <span class="title">provideUserModel</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> UserModel(<span class="string">"liuWeiQi"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>例子中在@Provides annomation下来创建了UserModel的实例。Module类要用@Module来修饰<br>2.创建一个Component</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="annotation">@Component</span>(modules = ActivityModule.class)</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">ActivityComponent</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">inject</span><span class="params">(MainActivity mainActivity)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="function">UserModel <span class="title">getUserModel</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>Component类用@Component来修饰，里面要用module来标明所依赖的module</li>
+<li>3行表明要使用该依赖的具体地方</li>
+</ul>
+<p>3.在需要的地方直接注入</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MainActivity</span> <span class="keyword">extends</span> <span class="title">ActionBarActivity</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> ActivityComponent mActivityComponent;</span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Inject</span> UserModel userModel;</span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onCreate</span><span class="params">(Bundle savedInstanceState)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.onCreate(savedInstanceState);</span><br><span class="line">        setContentView(R.layout.activity_main);</span><br><span class="line">        mActivityComponent = DaggerActivityComponent.builder().activityModule(<span class="keyword">new</span> ActivityModule()).build();</span><br><span class="line">        mActivityComponent.inject(<span class="keyword">this</span>);</span><br><span class="line">        ((TextView) findViewById(R.id.user_desc_line)).setText(userModel.id + <span class="string">"\n"</span> + userModel.name + <span class="string">"\n"</span> + userModel.gender);</span><br><span class="line">    &#125;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这样我们就完成了最简单的依赖注入。</p>
+<p>由于每当用到注入的时候都要在Component里inject相应的activity或fragment,有些麻烦。我们可以做以下改进。注意到第二个步骤里的5行了吗？我们为接口增加了提供UserModel依赖的方法。这样我们就可以省略掉第4行的inject。然后我们可以在基类的Activity中提供ActivityComponent的build.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">BaseActivity</span> <span class="keyword">extends</span> <span class="title">AppCompatActivity</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> ActivityComponent mActivityComponent;</span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onCreate</span><span class="params">(Bundle savedInstanceState)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.onCreate(savedInstanceState);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onResume</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.onResume();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onPause</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.onPause();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onDestroy</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.onDestroy();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> ActivityComponent <span class="title">getActivityComponent</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> DaggerActivityComponent.builder().activityModule(<span class="keyword">new</span> ActivityModule()).build();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>然后在具体使用的Activity中这样写,不用inject标签，直接用component提供的依赖来完成14行。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MainActivity</span> <span class="keyword">extends</span> <span class="title">BaseActivity</span> </span>&#123;</span><br><span class="line">    UserModel userModel;</span><br><span class="line">    <span class="keyword">private</span> Button button;</span><br><span class="line">    <span class="keyword">private</span> ActivityComponent mActivityComponent;</span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onCreate</span><span class="params">(Bundle savedInstanceState)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.onCreate(savedInstanceState);</span><br><span class="line">        setContentView(R.layout.activity_main);</span><br><span class="line">        initview();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">initview</span><span class="params">()</span></span>&#123;</span><br><span class="line">        mActivityComponent = getActivityComponent();</span><br><span class="line">        userModel=mActivityComponent.getUserModel();</span><br><span class="line">        button=(Button) findViewById(R.id.btn1);</span><br><span class="line">        button.setOnClickListener(<span class="keyword">new</span> View.OnClickListener() &#123;</span><br><span class="line">            <span class="annotation">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onClick</span><span class="params">(View v)</span> </span>&#123;</span><br><span class="line">                Toast.makeText(MainActivity.<span class="keyword">this</span>, userModel.getName(), Toast.LENGTH_LONG).show();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<hr>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2016/02/17/Dagger2/" data-id="cikqi8bwh0005xmufe6wruzm1" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-hello-world" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/02/17/hello-world/" class="article-date">
+  <time datetime="2016-02-17T06:30:18.000Z" itemprop="datePublished">2016-02-17</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/02/17/hello-world/">Hello World</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>Welcome to <a href="http://hexo.io/" target="_blank" rel="external">Hexo</a>! This is your very first post. Check <a href="http://hexo.io/docs/" target="_blank" rel="external">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="http://hexo.io/docs/troubleshooting.html" target="_blank" rel="external">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="external">GitHub</a>.</p>
+<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
+<p>More info: <a href="http://hexo.io/docs/writing.html" target="_blank" rel="external">Writing</a></p>
+<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
+<p>More info: <a href="http://hexo.io/docs/server.html" target="_blank" rel="external">Server</a></p>
+<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
+<p>More info: <a href="http://hexo.io/docs/generating.html" target="_blank" rel="external">Generating</a></p>
+<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
+<p>More info: <a href="http://hexo.io/docs/deployment.html" target="_blank" rel="external">Deployment</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2016/02/17/hello-world/" data-id="cikqi8bwe0003xmufsb8nj173" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+  
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  
+    
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">February 2016</a><span class="archive-list-count">8</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recents</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2016/02/17/Android-图片压缩/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2016/02/17/Android_Metarial_Design_Component/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2016/02/17/Difference_from_dp_dip_px_sp/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2016/02/17/otto/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2016/02/17/html-and-css/">(no title)</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2016 John Doe<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
+  <script src="/fancybox/jquery.fancybox.pack.js" type="text/javascript"></script>
+
+
+<script src="/js/script.js" type="text/javascript"></script>
+
+  </div>
+</body>
+</html>
