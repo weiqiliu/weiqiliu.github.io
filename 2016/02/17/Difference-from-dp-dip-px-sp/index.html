@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Difference from dp dip px sp | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="Difference from dp dip px spAndroid 开发最让人头疼的问题就是适配问题了，各种手机厂商各种型号的手机鱼龙混杂。所以理解好dp,px,sp等度量单位尤为重要，也是开发的基本常识。首先我们第一个要了解的是desity的概念，屏幕密度，就是一英寸里有多少个像素点，理论上来说密度越高越清晰,单位为ppi(pixels per inch) Android系统定义了四种像素密">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Difference from dp dip px sp">
+<meta property="og:url" content="http://yoursite.com/2016/02/17/Difference-from-dp-dip-px-sp/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="Difference from dp dip px spAndroid 开发最让人头疼的问题就是适配问题了，各种手机厂商各种型号的手机鱼龙混杂。所以理解好dp,px,sp等度量单位尤为重要，也是开发的基本常识。首先我们第一个要了解的是desity的概念，屏幕密度，就是一英寸里有多少个像素点，理论上来说密度越高越清晰,单位为ppi(pixels per inch) Android系统定义了四种像素密">
+<meta property="og:updated_time" content="2016-02-17T10:01:14.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Difference from dp dip px sp">
+<meta name="twitter:description" content="Difference from dp dip px spAndroid 开发最让人头疼的问题就是适配问题了，各种手机厂商各种型号的手机鱼龙混杂。所以理解好dp,px,sp等度量单位尤为重要，也是开发的基本常识。首先我们第一个要了解的是desity的概念，屏幕密度，就是一英寸里有多少个像素点，理论上来说密度越高越清晰,单位为ppi(pixels per inch) Android系统定义了四种像素密">
+  
+    <link rel="alternative" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" type="text/css">
+  
+
+</head>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-Difference-from-dp-dip-px-sp" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/02/17/Difference-from-dp-dip-px-sp/" class="article-date">
+  <time datetime="2016-02-17T10:00:19.000Z" itemprop="datePublished">2016-02-17</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Difference from dp dip px sp
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="Difference-from-dp-dip-px-sp"><a href="#Difference-from-dp-dip-px-sp" class="headerlink" title="Difference from dp dip px sp"></a>Difference from dp dip px sp</h2><p>Android 开发最让人头疼的问题就是适配问题了，各种手机厂商各种型号的手机鱼龙混杂。所以理解好dp,px,sp等度量单位尤为重要，也是开发的基本常识。<br>首先我们第一个要了解的是desity的概念，屏幕密度，就是一英寸里有多少个像素点，理论上来说密度越高越清晰,单位为ppi(pixels per inch) Android系统定义了四种像素密度：低（120dpi）、中（160dpi）、高（240dpi）和超高（320dpi），它们对应的dp到px的系数分别为0.75、1、1.5和2</p>
+<ul>
+<li>px(pixels) 像素,没什么好解释的。例如，320*480的屏幕在横向有320个象素，在纵向有480个象素。</li>
+<li>dp也叫dip（device indenpendent pixels）设备独立像素，dp不会依赖于手机的分辨率，而是依赖于density，它会随着不同手机的密度不同，自动变化为相应的px长度。举个列子，在density=160时，1dp=1px。这是我们把一根线=120px，在160desity下，它为120px,而在320density下，它变为了原来的一半。 而如果我们把线=120dp，在160desity下，它为120px,而在320density下，它会变为240px，使之与前面的长度相同。 </li>
+<li>sp （scaled pixels）要处理字体的大小。与dp类似，但是可以根据用户的字体大小首选项进行缩放。主要用于字体显示best for textsize。由此，根据 google 的建议，TextView 的字号最好使用 sp 做单位，而且查看TextView的源码可知 Android 默认使用 sp 作为字号单位。</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2016/02/17/Difference-from-dp-dip-px-sp/" data-id="cikqs5ut100042nufrnluqq7f" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2016/02/17/Dagger2/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          Dagger2
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2016/02/17/Android-Custom-View/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Android Custom View </div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  
+    
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">February 2016</a><span class="archive-list-count">9</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recents</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2016/02/17/Android-Material-Design-component/">Android Material Design component</a>
+          </li>
+        
+          <li>
+            <a href="/2016/02/17/Android-图片压缩/">Android 图片压缩</a>
+          </li>
+        
+          <li>
+            <a href="/2016/02/17/html-and-css/">html_and_css</a>
+          </li>
+        
+          <li>
+            <a href="/2016/02/17/Android—stickHeaderDecorate/">Android—stickHeaderDecorate</a>
+          </li>
+        
+          <li>
+            <a href="/2016/02/17/Dagger2/">Dagger2</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2016 John Doe<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
+  <script src="/fancybox/jquery.fancybox.pack.js" type="text/javascript"></script>
+
+
+<script src="/js/script.js" type="text/javascript"></script>
+
+  </div>
+</body>
+</html>

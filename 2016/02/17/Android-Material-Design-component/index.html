@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Android Material Design component | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="Android Material Design componentGoogle在Android 5.0后为了规范目前纷乱的设计推出了Material Design设计，作为Android的开发人员，紧跟老大的脚步是很重要的。 这里就简单介绍一些常用的Material Design的新增组件。
+
+toolbar
+
+toolbar是为了替代规范App Bar而推出的新组件，可以设置返回图标，主副标题，">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android Material Design component">
+<meta property="og:url" content="http://yoursite.com/2016/02/17/Android-Material-Design-component/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="Android Material Design componentGoogle在Android 5.0后为了规范目前纷乱的设计推出了Material Design设计，作为Android的开发人员，紧跟老大的脚步是很重要的。 这里就简单介绍一些常用的Material Design的新增组件。
+
+toolbar
+
+toolbar是为了替代规范App Bar而推出的新组件，可以设置返回图标，主副标题，">
+<meta property="og:updated_time" content="2016-02-17T11:52:18.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Android Material Design component">
+<meta name="twitter:description" content="Android Material Design componentGoogle在Android 5.0后为了规范目前纷乱的设计推出了Material Design设计，作为Android的开发人员，紧跟老大的脚步是很重要的。 这里就简单介绍一些常用的Material Design的新增组件。
+
+toolbar
+
+toolbar是为了替代规范App Bar而推出的新组件，可以设置返回图标，主副标题，">
+  
+    <link rel="alternative" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" type="text/css">
+  
+
+</head>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-Android-Material-Design-component" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/02/17/Android-Material-Design-component/" class="article-date">
+  <time datetime="2016-02-17T11:51:24.000Z" itemprop="datePublished">2016-02-17</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Android Material Design component
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="Android-Material-Design-component"><a href="#Android-Material-Design-component" class="headerlink" title="Android Material Design component"></a>Android Material Design component</h2><p>Google在Android 5.0后为了规范目前纷乱的设计推出了Material Design设计，作为Android的开发人员，紧跟老大的脚步是很重要的。 这里就简单介绍一些常用的Material Design的新增组件。</p>
+<ul>
+<li><strong>toolbar</strong></li>
+</ul>
+<p>toolbar是为了替代规范App Bar而推出的新组件，可以设置返回图标，主副标题，logo，更多按钮，也可以把toolbar当做viewGroup来使用在其中包含自己的布局。<br>不过需要注意的一点是，toolbar的高度为默认的高度，如果改变这个高度会使自带的返回图标，标题，logo等位置错位。google这么做估计是为了统一规范吧。如过不想使用默认的高度，就自己定义里面的布局吧。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&lt;android.support.v7.widget.Toolbar</span><br><span class="line">                android:id=<span class="string">"@+id/toolbar"</span></span><br><span class="line">                android:layout_width=<span class="string">"match_parent"</span></span><br><span class="line">                android:layout_height=<span class="string">"?attr/actionBarSize"</span></span><br><span class="line">                app:navigationIcon=<span class="string">"@drawable/icon_back_white"</span></span><br><span class="line">                app:subtitle=<span class="string">"副标题"</span></span><br><span class="line">                app:subtitleTextColor=<span class="string">"#ffffff"</span></span><br><span class="line">                app:title=<span class="string">"主标题"</span></span><br><span class="line">                app:titleTextColor=<span class="string">"#ffffff"</span> /&gt;</span><br></pre></td></tr></table></figure>
+<ul>
+<li><p><strong>AppBarLayout</strong></p>
+<p>  这个组件可以把多个布局组合起来，使之成为一个统一的AppBar,其目的是为了配合后面要介绍的CoordinatorLayout 和 CollapsingLayout的使用，来达到滑动的目的。另外它还提供了OnOffsetChangedListener接口来获取AppBarLayout滑动的状态</p>
+</li>
+</ul>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">&lt;android.support.design.widget.AppBarLayout</span><br><span class="line">    android:id="@+id/appbar"</span><br><span class="line">    android:layout_width="match_parent"</span><br><span class="line">    android:layout_height="wrap_content"&gt;</span><br><span class="line"></span><br><span class="line">        &lt;ImageView</span><br><span class="line">            android:layout_width="match_parent"</span><br><span class="line">            android:layout_height="wrap_content"</span><br><span class="line">            android:background="@drawable/ic_kind_01"</span><br><span class="line">            app:layout_collapseMode="parallax"</span><br><span class="line">            app:layout_collapseParallaxMultiplier="0.5"/&gt;</span><br><span class="line"></span><br><span class="line">        &lt;android.support.v7.widget.Toolbar</span><br><span class="line">            android:id="@+id/toolbar"</span><br><span class="line">            android:layout_width="match_parent"</span><br><span class="line">            android:layout_height="?attr/actionBarSize"</span><br><span class="line">            app:navigationIcon="@drawable/icon_back_white"</span><br><span class="line">            app:subtitle="副标题"</span><br><span class="line">            app:subtitleTextColor="#ffffff"</span><br><span class="line">            app:title="主标题"</span><br><span class="line">            app:titleTextColor="#ffffff" /&gt;</span><br><span class="line"></span><br><span class="line">&lt;/android.support.design.widget.AppBarLayout&gt;</span><br></pre></td></tr></table></figure>
+<ul>
+<li><p><strong>CoordinatorLayout</strong></p>
+<p>  这个是Material Design里重量级的新增控件。 在不了解之前，你可以把它视为一个加强版的frameLayout，里面的子view也是一层层堆叠上去的，也提供了诸如android:layout_gravity=”bottom|right”参数来控制view的位置。</p>
+</li>
+</ul>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">&lt;android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"</span><br><span class="line">    xmlns:app="http://schemas.android.com/apk/res-auto"</span><br><span class="line">    android:id="@+id/main_content"</span><br><span class="line">    android:layout_width="match_parent"</span><br><span class="line">    android:layout_height="match_parent"&gt;</span><br><span class="line"></span><br><span class="line">    &lt;android.support.design.widget.AppBarLayout</span><br><span class="line">        android:id="@+id/appbar"</span><br><span class="line">        android:layout_width="match_parent"</span><br><span class="line">        android:layout_height="wrap_content"</span><br><span class="line">        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"&gt;</span><br><span class="line"></span><br><span class="line">            &lt;ImageView</span><br><span class="line">                android:layout_width="match_parent"</span><br><span class="line">                android:layout_height="wrap_content"</span><br><span class="line">                android:background="@drawable/ic_kind_01"/&gt;</span><br><span class="line"></span><br><span class="line">            &lt;android.support.v7.widget.Toolbar</span><br><span class="line">                android:id="@+id/toolbar"</span><br><span class="line">                android:layout_width="match_parent"</span><br><span class="line">                android:layout_height="?attr/actionBarSize"</span><br><span class="line">                app:navigationIcon="@drawable/icon_back_white"</span><br><span class="line">                app:popupTheme="@style/ThemeOverlay.AppCompat.Light"</span><br><span class="line">                app:subtitle="副标题"</span><br><span class="line">                app:subtitleTextColor="#ffffff"</span><br><span class="line">                app:title="主标题"</span><br><span class="line">                app:titleTextColor="#ffffff" /&gt;</span><br><span class="line"></span><br><span class="line">        &lt;/android.support.design.widget.CollapsingToolbarLayout&gt;</span><br><span class="line"></span><br><span class="line">    &lt;/android.support.design.widget.AppBarLayout&gt;</span><br><span class="line"></span><br><span class="line">    &lt;android.support.v7.widget.RecyclerView</span><br><span class="line">        android:id="@+id/rvToDoList"</span><br><span class="line">        android:layout_width="match_parent"</span><br><span class="line">        android:layout_height="match_parent"</span><br><span class="line">        app:layout_behavior="@string/appbar_scrolling_view_behavior" /&gt;</span><br><span class="line"></span><br><span class="line">&lt;/android.support.design.widget.CoordinatorLayout&gt;</span><br></pre></td></tr></table></figure>
+<p>这里要注意两点</p>
+<p>1.Behavior是Android新出的Design库里新增的布局概念。Behavior只有是CoordinatorLayout的直接子View才有意义。可以为任何View添加一个Behavior。Behavior是一系列回调。让你有机会以非侵入的为View添加动态的依赖布局，和处理父布局(CoordinatorLayout)滑动手势的机会。其中官方提供的app:layout_behavior=”@string/appbar_scrolling_view_behavior”<br>可以使该view在AppBarLayout之下。如果需要可以自定义behavior.</p>
+<p>2.可以通过设置子View,添加app:layout_scrollFlags属性来控制,滚动时候的表现.其中有4种Flag的类型（后两种只有CollapsingLayout才能设置）.</p>
+<p>· <font size="4px">scroll</font>: this flag should be set for all views that want to scroll off the screen - for views that do not use this flag, they’ll remain pinned to the top of the screen</p>
+<p>· <font size="4px">enterAlways</font>: this flag ensures that any downward scroll will cause this view to become visible, enabling the ‘quick return’ pattern</p>
+<p>· <font size="4px">enterAlwaysCollapsed</font>: When your view has declared a minHeight and you use this flag, your View will only enter at its minimum height (i.e., ‘collapsed’), only re-expanding to its full height when the scrolling view has reached it’s top.( 向上滚动时收缩View，但可以固定Toolbar一直在上面。)</p>
+<p>· <font size="4px">exitUntilCollapsed</font>: this flag causes the view to scroll off until it is ‘collapsed’ (its minHeight) before exiting</p>
+<ul>
+<li><p><strong>CollapsingToolbarLayout</strong></p>
+<p>  作用是提供了一个可以折叠的Toolbar，它继承至FrameLayout，给它设置layout_scrollFlags，它可以控制包含在CollapsingToolbarLayout中的控件(如：ImageView、Toolbar)在响应layout_behavior事件时作出相应的scrollFlags滚动事件</p>
+</li>
+</ul>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line">	&lt;android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"</span><br><span class="line">    xmlns:app="http://schemas.android.com/apk/res-auto"</span><br><span class="line">    android:id="@+id/main_content"</span><br><span class="line">    android:layout_width="match_parent"</span><br><span class="line">    android:layout_height="match_parent"&gt;</span><br><span class="line"></span><br><span class="line">    &lt;android.support.design.widget.AppBarLayout</span><br><span class="line">        android:id="@+id/appbar"</span><br><span class="line">        android:layout_width="match_parent"</span><br><span class="line">        android:layout_height="wrap_content"</span><br><span class="line">        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"&gt;</span><br><span class="line"></span><br><span class="line">        &lt;android.support.design.widget.CollapsingToolbarLayout</span><br><span class="line">            android:id="@+id/collapsing_toolbar_layout"</span><br><span class="line">            android:layout_width="match_parent"</span><br><span class="line">            android:layout_height="match_parent"</span><br><span class="line">            app:contentScrim="#30469b"</span><br><span class="line">            app:expandedTitleMarginStart="54dp"</span><br><span class="line">            app:layout_scrollFlags="scroll|exitUntilCollapsed"&gt;</span><br><span class="line"></span><br><span class="line">            &lt;ImageView</span><br><span class="line">                android:layout_width="match_parent"</span><br><span class="line">                android:layout_height="wrap_content"</span><br><span class="line">                android:background="@drawable/ic_kind_01"</span><br><span class="line">                app:layout_collapseMode="parallax"</span><br><span class="line">                app:layout_collapseParallaxMultiplier="0.5"/&gt;</span><br><span class="line"></span><br><span class="line">            &lt;android.support.v7.widget.Toolbar</span><br><span class="line">                android:id="@+id/toolbar"</span><br><span class="line">                android:layout_width="match_parent"</span><br><span class="line">                android:layout_height="?attr/actionBarSize"</span><br><span class="line">                app:layout_collapseMode="pin"</span><br><span class="line">                app:layout_scrollFlags="scroll"</span><br><span class="line">                app:navigationIcon="@drawable/icon_back_white"</span><br><span class="line">                app:popupTheme="@style/ThemeOverlay.AppCompat.Light"</span><br><span class="line">                app:subtitle="副标题"</span><br><span class="line">                app:subtitleTextColor="#ffffff"</span><br><span class="line">                app:title="主标题"</span><br><span class="line">                app:titleTextColor="#ffffff" /&gt;</span><br><span class="line"></span><br><span class="line">        &lt;/android.support.design.widget.CollapsingToolbarLayout&gt;</span><br><span class="line"></span><br><span class="line">    &lt;/android.support.design.widget.AppBarLayout&gt;</span><br><span class="line"></span><br><span class="line">    &lt;android.support.v7.widget.RecyclerView</span><br><span class="line">        android:id="@+id/rvToDoList"</span><br><span class="line">        android:layout_width="match_parent"</span><br><span class="line">        android:layout_height="match_parent"</span><br><span class="line">        app:layout_behavior="@string/appbar_scrolling_view_behavior" /&gt;</span><br><span class="line"></span><br><span class="line">&lt;/android.support.design.widget.CoordinatorLayout&gt;</span><br></pre></td></tr></table></figure>
+<p>几个参数说明：</p>
+<p>组件本身：</p>
+<ul>
+<li><p>contentScrim - 设置当完全CollapsingToolbarLayout折叠(收缩)后的背景颜色。</p>
+</li>
+<li><p>expandedTitleMarginStart - 设置扩张时候(还没有收缩时)title向左填充的距离。</p>
+</li>
+</ul>
+<p>在它的subView中：</p>
+<ul>
+<li><p>pin -  设置为这个模式时，当CollapsingToolbarLayout完全收缩后，Toolbar还可以保留在屏幕上。</p>
+</li>
+<li><p>parallax - 设置为这个模式时，在内容滚动时，</p>
+</li>
+<li>layout_collapseParallaxMultiplier 视差因子</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2016/02/17/Android-Material-Design-component/" data-id="cikqs5ut900082nuf958c7eql" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2016/02/17/Android-图片压缩/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Android 图片压缩</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  
+    
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">February 2016</a><span class="archive-list-count">9</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recents</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2016/02/17/Android-Material-Design-component/">Android Material Design component</a>
+          </li>
+        
+          <li>
+            <a href="/2016/02/17/Android-图片压缩/">Android 图片压缩</a>
+          </li>
+        
+          <li>
+            <a href="/2016/02/17/html-and-css/">html_and_css</a>
+          </li>
+        
+          <li>
+            <a href="/2016/02/17/Android—stickHeaderDecorate/">Android—stickHeaderDecorate</a>
+          </li>
+        
+          <li>
+            <a href="/2016/02/17/Dagger2/">Dagger2</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2016 John Doe<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
+  <script src="/fancybox/jquery.fancybox.pack.js" type="text/javascript"></script>
+
+
+<script src="/js/script.js" type="text/javascript"></script>
+
+  </div>
+</body>
+</html>

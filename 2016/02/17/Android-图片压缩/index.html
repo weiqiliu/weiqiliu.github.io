@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Android 图片压缩 | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="Android 图片压缩对图片压缩在App应用里是非常普遍和常见的。Android程序的性能和内存问题，大部分都和图片紧密相关，而图片的加载在很多情况下很用到Bitmap（位图）这个类。而由于Bitmap自身的特性（将每个像素的属性全部保存在内存中），导致稍有不慎就会创建出一个占用内存非常大的Bitmap对象，从而导致加载过慢，还会有内存溢出的风险。所以，Android程序要做优化，Bitmap的">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android 图片压缩">
+<meta property="og:url" content="http://yoursite.com/2016/02/17/Android-图片压缩/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="Android 图片压缩对图片压缩在App应用里是非常普遍和常见的。Android程序的性能和内存问题，大部分都和图片紧密相关，而图片的加载在很多情况下很用到Bitmap（位图）这个类。而由于Bitmap自身的特性（将每个像素的属性全部保存在内存中），导致稍有不慎就会创建出一个占用内存非常大的Bitmap对象，从而导致加载过慢，还会有内存溢出的风险。所以，Android程序要做优化，Bitmap的">
+<meta property="og:updated_time" content="2016-02-17T11:48:23.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Android 图片压缩">
+<meta name="twitter:description" content="Android 图片压缩对图片压缩在App应用里是非常普遍和常见的。Android程序的性能和内存问题，大部分都和图片紧密相关，而图片的加载在很多情况下很用到Bitmap（位图）这个类。而由于Bitmap自身的特性（将每个像素的属性全部保存在内存中），导致稍有不慎就会创建出一个占用内存非常大的Bitmap对象，从而导致加载过慢，还会有内存溢出的风险。所以，Android程序要做优化，Bitmap的">
+  
+    <link rel="alternative" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" type="text/css">
+  
+
+</head>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-Android-图片压缩" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/02/17/Android-图片压缩/" class="article-date">
+  <time datetime="2016-02-17T11:47:43.000Z" itemprop="datePublished">2016-02-17</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Android 图片压缩
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="Android-图片压缩"><a href="#Android-图片压缩" class="headerlink" title="Android 图片压缩"></a>Android 图片压缩</h2><p>对图片压缩在App应用里是非常普遍和常见的。Android程序的性能和内存问题，大部分都和图片紧密相关，而图片的加载在很多情况下很用到Bitmap（位图）这个类。而由于Bitmap自身的特性（将每个像素的属性全部保存在内存中），导致稍有不慎就会创建出一个占用内存非常大的Bitmap对象，从而导致加载过慢，还会有内存溢出的风险。所以，Android程序要做优化，Bitmap的优化是必不可少的一步。</p>
+<p>压缩原理：压缩一张图片，我们需要知道这张图片的原始大小，然后根据我们设定的压缩比例进行压缩。主要分三步</p>
+<ul>
+<li>获取原始图片的长宽</li>
+<li>计算缩放比例</li>
+<li>根据计算出的inSampleSize生成Bitmap </li>
+</ul>
+<p><strong>1.获取原始图片的长宽</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">BitmapFactory.Options options = <span class="keyword">new</span> BitmapFactory.Options();</span><br><span class="line">options.inJustDecodeBounds = <span class="keyword">true</span>;</span><br><span class="line"></span><br><span class="line">BitmapFactory.decodeResource(getResources(),R.id.myimage,options;</span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> imageHeight = options.outHeight;</span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> imageWidth = options.outWidth;</span><br><span class="line"></span><br><span class="line">String imageType = options.outMimeType;</span><br></pre></td></tr></table></figure>
+<p>要说明的一下的是，如果直接使用BitmapFactory.decodeResource()方法来从资源文件中读取一张图片会生成一个Bitmap，它会占用一定的内存。但如果再之前使用一个BitmapFactory.Options对象，并把Options的inJustDecodeBounds属性设置为true，会使得decodeResource(Resources res, int id, Options opts)方法就不会生成Bitmap对象，因为opts控制了decodeResource是对图片完全解码还是只返回图片的大小，当是true时仅仅是读取该图片的尺寸和类型信息。</p>
+<p>这是源码中对于inJustDecodeBounds的说明，如果设置为true,编译器返回空即不会返回bitmap,但是会允许调用者查询其属性。 然而不会为bitmap分配内存空间。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span><br><span class="line"> * If set to true, the decoder will return null (no bitmap), but</span><br><span class="line"> * the out... fields will still be set, allowing the caller to query</span><br><span class="line"> * the bitmap without having to allocate the memory for its pixels.</span><br><span class="line"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">boolean</span> inJustDecodeBounds;</span><br></pre></td></tr></table></figure>
+<p><strong>2.计算缩放比例</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> height = options.outHeight;  </span><br><span class="line">   <span class="keyword">int</span> width = options.outWidth;   </span><br><span class="line">   <span class="keyword">int</span> inSampleSize = <span class="number">1</span>;  </span><br><span class="line">   <span class="keyword">int</span> reqHeight=<span class="number">800</span>;  </span><br><span class="line">   <span class="keyword">int</span> reqWidth=<span class="number">480</span>;  </span><br><span class="line">   <span class="keyword">if</span> (height &gt; reqHeight || width &gt; reqWidth) &#123;  </span><br><span class="line">  		<span class="keyword">final</span> <span class="keyword">int</span> heightRatio = Math.round((<span class="keyword">float</span>) height/ (<span class="keyword">float</span>) reqHeight);  </span><br><span class="line">  		<span class="keyword">final</span> <span class="keyword">int</span> widthRatio = Math.round((<span class="keyword">float</span>) width / (<span class="keyword">float</span>) reqWidth);              </span><br><span class="line">  		inSampleSize = heightRatio &lt; widthRatio ? heightRatio : widthRatio;  </span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+<p>例子中压缩后图片期望的宽带定为480，高度设为800，这2个值只是期望的宽度与高度，实际上压缩后的实际宽度也高度会比期望的要大。如果图片的原始高度或者宽带大约我们期望的宽带和高度，我们需要计算出缩放比例的数值。否则就不缩放。heightRatio是图片原始高度与压缩后高度的倍数，widthRatio是图片原始宽度与压缩后宽度的倍数。inSampleSize为heightRatio与widthRatio中最小的那个，inSampleSize就是缩放值。 inSampleSize为1表示宽度和高度不缩放，为2表示压缩后的宽度与高度为原来的1/2，小于1自动默认为1</p>
+<p><strong>3.根据计算出的inSampleSize生成Bitmap</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//计算 inSampleSize 的值</span></span><br><span class="line"> options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);</span><br><span class="line"> </span><br><span class="line"> <span class="comment">//根据计算出的 inSampleSize 来解码图片生成Bitmap</span></span><br><span class="line"> options.inJustDecodeBounds = <span class="keyword">false</span>;</span><br><span class="line"></span><br><span class="line"> <span class="keyword">return</span> BitmapFactory.decodeResource(res, resId, options);</span><br></pre></td></tr></table></figure>
+<p>注意，最后要生成返回bitmap，所以option的inJustDecodeBounds的设置为false。</p>
+<p>最后贴上一个完整的代码</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">BitMapUtil</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Bitmap <span class="title">decodeSampledBitmapFromResource</span><span class="params">(Resources res, <span class="keyword">int</span> resId,</span><br><span class="line">                                                         <span class="keyword">int</span> reqWidth, <span class="keyword">int</span> reqHeight)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 首先设置 inJustDecodeBounds=true 来获取图片尺寸</span></span><br><span class="line">        <span class="keyword">final</span> BitmapFactory.Options options = <span class="keyword">new</span> BitmapFactory.Options();</span><br><span class="line">        options.inJustDecodeBounds = <span class="keyword">true</span>;</span><br><span class="line">        BitmapFactory.decodeResource(res, resId, options);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 计算 inSampleSize 的值</span></span><br><span class="line">        options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 根据计算出的 inSampleSize 来解码图片生成Bitmap</span></span><br><span class="line">        options.inJustDecodeBounds = <span class="keyword">false</span>;</span><br><span class="line">        <span class="keyword">return</span> BitmapFactory.decodeResource(res, resId, options);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">calculateInSampleSize</span><span class="params">(</span><br><span class="line">            BitmapFactory.Options options, <span class="keyword">int</span> reqWidth, <span class="keyword">int</span> reqHeight)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 原始图片的宽高</span></span><br><span class="line">        <span class="keyword">final</span> <span class="keyword">int</span> height = options.outHeight;</span><br><span class="line">        <span class="keyword">final</span> <span class="keyword">int</span> width = options.outWidth;</span><br><span class="line">        <span class="keyword">int</span> inSampleSize = <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (height &gt; reqHeight || width &gt; reqWidth) &#123;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">final</span> <span class="keyword">int</span> halfHeight = height / <span class="number">2</span>;</span><br><span class="line">            <span class="keyword">final</span> <span class="keyword">int</span> halfWidth = width / <span class="number">2</span>;</span><br><span class="line"></span><br><span class="line">            <span class="comment">// 在保证解析出的bitmap宽高分别大于目标尺寸宽高的前提下，取可能的inSampleSize的最大值</span></span><br><span class="line">            <span class="keyword">while</span> ((halfHeight / inSampleSize) &gt; reqHeight</span><br><span class="line">                    &amp;&amp; (halfWidth / inSampleSize) &gt; reqWidth) &#123;</span><br><span class="line">                inSampleSize *= <span class="number">2</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> inSampleSize;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">getSize</span><span class="params">(Resources res, <span class="keyword">int</span> resId,</span><br><span class="line">                              <span class="keyword">int</span> reqWidth, <span class="keyword">int</span> reqHeight)</span></span>&#123;</span><br><span class="line">        <span class="keyword">final</span> BitmapFactory.Options options = <span class="keyword">new</span> BitmapFactory.Options();</span><br><span class="line">        options.inJustDecodeBounds = <span class="keyword">true</span>;</span><br><span class="line">        BitmapFactory.decodeResource(res, resId, options);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 计算 inSampleSize 的值</span></span><br><span class="line">        options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);</span><br><span class="line"></span><br><span class="line">        options.inJustDecodeBounds = <span class="keyword">true</span>;</span><br><span class="line">        BitmapFactory.decodeResource(res, resId, options);</span><br><span class="line">        <span class="keyword">return</span> options.outHeight;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2016/02/17/Android-图片压缩/" data-id="cikqs5ut600072nufdb5u9u8x" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2016/02/17/Android-Material-Design-component/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          Android Material Design component
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2016/02/17/html-and-css/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">html_and_css</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  
+    
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">February 2016</a><span class="archive-list-count">9</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recents</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2016/02/17/Android-Material-Design-component/">Android Material Design component</a>
+          </li>
+        
+          <li>
+            <a href="/2016/02/17/Android-图片压缩/">Android 图片压缩</a>
+          </li>
+        
+          <li>
+            <a href="/2016/02/17/html-and-css/">html_and_css</a>
+          </li>
+        
+          <li>
+            <a href="/2016/02/17/Android—stickHeaderDecorate/">Android—stickHeaderDecorate</a>
+          </li>
+        
+          <li>
+            <a href="/2016/02/17/Dagger2/">Dagger2</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2016 John Doe<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
+  <script src="/fancybox/jquery.fancybox.pack.js" type="text/javascript"></script>
+
+
+<script src="/js/script.js" type="text/javascript"></script>
+
+  </div>
+</body>
+</html>
