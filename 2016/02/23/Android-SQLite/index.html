@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Android SQLite | liuWeiQi blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="Android SQLite1.SQLite简介
+SQLite是一款轻型的数据库，是遵守ACID的关联式数据库管理系统，它的设计目标是嵌入  式的，而且目前已经在很多嵌入式产品中使用了它，它占用资源非常的低，在嵌入式设备中，可能只需要几百K的内存就够了。它能够支持 Windows/Linux/Unix等等主流的操作系统，同时能够跟很多程序语言相结合，比如Tcl、PHP、Java、C++、.Net等">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android SQLite">
+<meta property="og:url" content="http://yoursite.com/2016/02/23/Android-SQLite/index.html">
+<meta property="og:site_name" content="liuWeiQi blog">
+<meta property="og:description" content="Android SQLite1.SQLite简介
+SQLite是一款轻型的数据库，是遵守ACID的关联式数据库管理系统，它的设计目标是嵌入  式的，而且目前已经在很多嵌入式产品中使用了它，它占用资源非常的低，在嵌入式设备中，可能只需要几百K的内存就够了。它能够支持 Windows/Linux/Unix等等主流的操作系统，同时能够跟很多程序语言相结合，比如Tcl、PHP、Java、C++、.Net等">
+<meta property="og:updated_time" content="2016-02-24T06:01:21.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Android SQLite">
+<meta name="twitter:description" content="Android SQLite1.SQLite简介
+SQLite是一款轻型的数据库，是遵守ACID的关联式数据库管理系统，它的设计目标是嵌入  式的，而且目前已经在很多嵌入式产品中使用了它，它占用资源非常的低，在嵌入式设备中，可能只需要几百K的内存就够了。它能够支持 Windows/Linux/Unix等等主流的操作系统，同时能够跟很多程序语言相结合，比如Tcl、PHP、Java、C++、.Net等">
+  
+    <link rel="alternative" href="/atom.xml" title="liuWeiQi blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" type="text/css">
+  
+
+</head>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">liuWeiQi blog</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-Android-SQLite" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/02/23/Android-SQLite/" class="article-date">
+  <time datetime="2016-02-23T08:33:38.000Z" itemprop="datePublished">2016-02-23</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Android SQLite
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="Android-SQLite"><a href="#Android-SQLite" class="headerlink" title="Android SQLite"></a>Android SQLite</h2><p>1.SQLite简介</p>
+<p>SQLite是一款轻型的数据库，是遵守ACID的关联式数据库管理系统，它的设计目标是嵌入  式的，而且目前已经在很多嵌入式产品中使用了它，它占用资源非常的低，在嵌入式设备中，可能只需要几百K的内存就够了。它能够支持 Windows/Linux/Unix等等主流的操作系统，同时能够跟很多程序语言相结合，比如Tcl、PHP、Java、C++、.Net等，还有ODBC接口，同样比起 Mysql、PostgreSQL这两款开源世界著名的数据库管理系统来讲，它的处理速度比他们都快。</p>
+<p>2.SQLite数据类型</p>
+<p>一般数据采用的固定的静态数据类型，而SQLite采用的是动态数据类型，会根据存入值自动判断。SQLite具有以下五种常用的数据类型：</p>
+<p>NULL: 这个值为空值<br>VARCHAR(n)：长度不固定且其最大长度为 n 的字串，n不能超过 4000。<br>CHAR(n)：长度固定为n的字串，n不能超过 254。<br>INTEGER: 值被标识为整数,依据值的大小可以依次被存储为1,2,3,4,5,6,7,8.<br>REAL: 所有值都是浮动的数值,被存储为8字节的IEEE浮动标记序号.<br>TEXT: 值为文本字符串,使用数据库编码存储(TUTF-8, UTF-16BE or UTF-16-LE).<br>BLOB: 值是BLOB数据块，以输入的数据格式进行存储。如何输入就如何存储,不改  变格式。<br>DATA ：包含了 年份、月份、日期。<br>TIME： 包含了 小时、分钟、秒。</p>
+<p>3.SQLite注意事项<font color="red">（重点）</font></p>
+<ul>
+<li>库级锁：意味着同时只能允许一个写操作，也就是说，即事务T1在A表插入一条数据，事务T2在B表中插入一条数据，这两个操作不能同时进行，即使你的机器有100个CPU，也无法同时进行，而只能顺序进行。表级都不能并行，更别说元组级了——这就是库级锁。对于这样的问题，解决的办法就是keep single sqlite connection，保持SqliteOpenHelper是单例模式，同时对所有数据库操作的方法添加synchronized关键字。</li>
+<li>事务：使用事务可以有效的提升的性能</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">db.beginTransaction();</span><br><span class="line">   <span class="keyword">try</span> &#123;</span><br><span class="line">     ...</span><br><span class="line">     db.setTransactionSuccessful();</span><br><span class="line">   &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">     db.endTransaction();</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+<p>4.SQLiteOpenHelper<br>Android平台提供给我们一个数据库辅助类来创建或打开数据库，这个辅助类继承自SQLiteOpenHelper类</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">DaoMaster</span> <span class="keyword">extends</span> <span class="title">SQLiteOpenHelper</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> SCHEMA_VERSION = <span class="number">3</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span>  String DB_NAME = <span class="string">"wawa.db"</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> DaoMaster instance=<span class="keyword">null</span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">DaoMaster</span><span class="params">(Context context)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>(context, DB_NAME, <span class="keyword">null</span>, SCHEMA_VERSION);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">static</span> DaoMaster <span class="title">getInstance</span><span class="params">(Context context)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(instance == <span class="keyword">null</span>) &#123;</span><br><span class="line">            instance = <span class="keyword">new</span> DaoMaster(context);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> instance;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onCreate</span><span class="params">(SQLiteDatabase db)</span> </span>&#123;</span><br><span class="line">        createAllTables(db);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">	 <span class="comment">// Called when the database needs to be upgraded.</span></span><br><span class="line">    <span class="comment">// This method will only be called if a database already exists on disk with the same DATABASE_NAME,</span></span><br><span class="line">    <span class="comment">// but the DATABASE_VERSION is different than the version of the database that exists on disk.</span></span><br><span class="line">    <span class="annotation">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onUpgrade</span><span class="params">(SQLiteDatabase db, <span class="keyword">int</span> oldVersion, <span class="keyword">int</span> newVersion)</span> </span>&#123;</span><br><span class="line">        dropAllTables(db);</span><br><span class="line">        onCreate(db);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">createAllTables</span><span class="params">(SQLiteDatabase db)</span> </span>&#123;</span><br><span class="line">        UserDao.createTable(db);</span><br><span class="line">        ProfileDao.createTable(db);</span><br><span class="line">        SubscribeDao.createTable(db);</span><br><span class="line">        CityDao.createTable(db);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">dropAllTables</span><span class="params">(SQLiteDatabase db)</span> </span>&#123;</span><br><span class="line">        UserDao.dropTable(db);</span><br><span class="line">        ProfileDao.dropTable(db);</span><br><span class="line">        SubscribeDao.dropTable(db);</span><br><span class="line">        CityDao.dropTable(db);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>利用这个帮助类能很好的创建，更新数据库。其中的onUpgrade()只有当版本号不同时才会执行，当表有更新时通过改变版本号来重新建立表。 另外由于可能会在许多地方利用数据库，为了避免内存泄露和不必要重复分配。最好的办法就是SQLiteOpenHelper采用单列模式(singleton instance)。</p>
+<p>5.SQLite的query、insert、update、delete<br>这四种操作都有两种方法可以达到目的，第一种是采用Android提供的方法，第二种是直接执行sql语句。</p>
+<ul>
+<li><p>insert:<br>  public long insert (String table, String nullColumnHack, ContentValues values)</p>
+<p>  table:表名。<br>  nullColumnHack:当values参数为空或者里面没有内容的时候，我们insert是会失败的（底层数据库不允许插入一个空行），为了防止这种情况，我们要在这里指定一个 列名，到时候如果发现将要插入的行为空行时，就会将你指定的这个列名的值设为null，然后再向数据库中插入。<br>  values:一个ContentValues对象，类似一个map.通过键值对的形式存储值。</p>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">insert</span><span class="params">(Context context, ContentValues contentValues)</span> </span>&#123;</span><br><span class="line">    SQLiteDatabase db = DaoMaster.getInstance(context).getWritableDatabase();</span><br><span class="line">    db.beginTransaction();</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        db.insert(TABLE_NAME, <span class="keyword">null</span>, contentValues);</span><br><span class="line">        db.setTransactionSuccessful();</span><br><span class="line">    &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">        e.printStackTrace();</span><br><span class="line">    &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">        db.endTransaction();</span><br><span class="line">        db.close();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">String sql = "insert into tableName(username,password) values ('Jack Johnson','iLovePopMuisc');</span><br><span class="line">db.execSQL(sql);</span><br></pre></td></tr></table></figure>
+<ul>
+<li><p>update:</p>
+<p>  public int update (String table, ContentValues values, String whereClause, String[] whereArgs)<br>  values:要更新的数据内容<br>  whereClause：更新的字段名称,为null即为全部字段<br>  whereArgs：whereClause里的占位符</p>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">   ContentValues cv = <span class="keyword">new</span> ContentValues();<span class="comment">//实例化ContentValues</span></span><br><span class="line">cv.put(<span class="string">"password"</span>,<span class="string">"iHatePopMusic"</span>);<span class="comment">//添加要更改的字段及内容</span></span><br><span class="line">String whereClause = <span class="string">"username=?"</span>;<span class="comment">//修改条件</span></span><br><span class="line">String[] whereArgs = &#123;<span class="string">"Jack Johnson"</span>&#125;;<span class="comment">//修改条件的参数</span></span><br><span class="line">db.update(<span class="string">"user"</span>,cv,whereClause,whereArgs);<span class="comment">//执行修改</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">String sql = <span class="string">"update user set password = 'iHatePopMusic' where username='Jack Johnson'"</span>;<span class="comment">//修改的SQL语句</span></span><br><span class="line">db.execSQL(sql);<span class="comment">//执行修改</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>delete:</li>
+</ul>
+<p>public int delete (String table, String whereClause, String[] whereArgs)</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ContentValues cv = <span class="keyword">new</span> ContentValues();</span><br><span class="line">String[] args = &#123;String.valueOf(<span class="string">"c"</span>)&#125;;</span><br><span class="line">delete(<span class="string">"user"</span>, <span class="string">"username=?"</span>, args);</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">String sql = <span class="string">"delete from tablename where username='c'"</span>;</span><br><span class="line">db.execSQL(sql);</span><br></pre></td></tr></table></figure>
+<ul>
+<li>query</li>
+</ul>
+<p>public Cursor query (String table, String[] columns, String selection, String[] selectionArgs, String groupBy, String having, String orderBy,String limit)</p>
+<p>columns:想要显示的列，若为空则返回所有列，不建议设置为空.<br>selection:where子句，声明要返回的行的要求，如果为空则返回表的所有行.<br>selectionArgs: selection:where的占位符<br>groupBy:    分组方式，若为空则不分组.<br>having    : having条件，若为空则返回全部（不建议)<br>orderBy: 排序方式，为空则为默认排序方式.<br>limit:限制返回的记录的条数，为空则不限制.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ContentValues cv = <span class="keyword">new</span> ContentValues();</span><br><span class="line">String[] args = &#123;String.valueOf(<span class="string">"a"</span>)&#125;;</span><br><span class="line">query(<span class="string">"user"</span>, <span class="keyword">new</span> String[] &#123; <span class="string">"username"</span>,<span class="string">"password"</span> &#125;,<span class="string">"username=?"</span>, args, <span class="keyword">null</span>,<span class="keyword">null</span>, <span class="keyword">null</span>, <span class="keyword">null</span>);</span><br></pre></td></tr></table></figure>
+<p>query返回的是个Cursor。然后通过Cursor可以获取查询出来的内容</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2016/02/23/Android-SQLite/" data-id="cil92ne8k0008zguf1bijv5b8" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2016/02/17/Android-Material-Design-component/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Android Material Design component</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  
+    
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">February 2016</a><span class="archive-list-count">10</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recents</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2016/02/23/Android-SQLite/">Android SQLite</a>
+          </li>
+        
+          <li>
+            <a href="/2016/02/17/Android-Material-Design-component/">Android Material Design component</a>
+          </li>
+        
+          <li>
+            <a href="/2016/02/17/Android-图片压缩/">Android 图片压缩</a>
+          </li>
+        
+          <li>
+            <a href="/2016/02/17/html-and-css/">html_and_css</a>
+          </li>
+        
+          <li>
+            <a href="/2016/02/17/Android—stickHeaderDecorate/">Android—stickHeaderDecorate</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2016 WeiqiLiu<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
+  <script src="/fancybox/jquery.fancybox.pack.js" type="text/javascript"></script>
+
+
+<script src="/js/script.js" type="text/javascript"></script>
+
+  </div>
+</body>
+</html>
